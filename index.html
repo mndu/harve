@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HARVE edits the reward head of scalar reward models to reduce reward hacking. EMNLP 2026 project page and RewardHackBench results.">
+  <meta name="theme-color" content="#275c50">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="HARVE | EMNLP 2026">
+  <meta property="og:description" content="Hacking-Aware Reward-Head Vector Editing for Robust Reward Models">
+  <meta property="og:url" content="https://mndu.github.io/harve/">
+  <meta property="og:image" content="https://mndu.github.io/harve/assets/framework.webp">
+  <link rel="canonical" href="https://mndu.github.io/harve/">
+  <title>HARVE · EMNLP 2026</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="paper.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#overview">Skip to content</a>
+  <main>
+    <header class="hero">
+      <h1><span class="project-name">HARVE</span><span class="paper-title">Hacking-Aware Reward-Head Vector Editing<br class="desktop-break"> for Robust Reward Models</span></h1>
+      <div class="authors"><span>Shuang Liu<sup>1</sup></span><span>Yuxuan Bo<sup>2</sup></span><span>Qiuyang Zhao<sup>3</sup></span><span>Caiyue Huang<sup>4</sup></span><span>Xiaorong Chen<sup>5</sup></span><span>Yanguang Liu<sup>6</sup></span><span>Mengnan Du<sup>7</sup></span></div>
+      <div class="affiliations"><span><sup>1</sup> Carnegie Mellon University</span><span><sup>2</sup> University of Virginia</span><span><sup>3</sup> Harvard University</span><span><sup>4</sup> Stanford University</span><span><sup>5</sup> University of Michigan</span><span><sup>6</sup> New Jersey Institute of Technology</span><span><sup>7</sup> The Chinese University of Hong Kong, Shenzhen</span></div>
+      <div class="resources">
+        <a class="button primary" href="3100_HARVE_Hacking_Aware_Rewar.pdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1-1V8zM14 3v6h5M9 13h6M9 17h6"/></svg> Read the paper</a>
+        <a class="button" href="https://github.com/olivialiu121/HARVE-Reward-Head-Editing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-12-2 20"/></svg> Code</a>
+        <a class="button" href="https://arxiv.org/abs/2606.03131"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6m0-6L10 14M10 5H5v14h14v-5"/></svg> arXiv</a>
+        <a class="button" href="#citation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 7H4v6h6V7ZM20 7h-6v6h6V7ZM10 13c0 4-2 5-4 5m14-5c0 4-2 5-4 5"/></svg> BibTeX</a>
+      </div>
+    </header>
+
+    <section class="intro section" id="overview" aria-labelledby="overview-title">
+      <p class="eyebrow">WHEN CONVINCING ANSWERS FOOL THE REWARD MODEL</p>
+      <h2 id="overview-title">Find the hacking directions.<br class="desktop-break"> Edit the reward head.</h2>
+      <p class="lead">HARVE uses matched gold and hacked answers to identify residual-stream directions associated with reward hacking. A geometric edit to the scalar reward head then reduces sensitivity to those directions, without gradient updates or changing the transformer backbone.</p>
+      <figure class="framework"><a href="assets/framework.webp" aria-label="View the full-size HARVE framework"><img src="assets/framework.webp" width="1750" height="715" alt="HARVE method: score answers with a frozen reward model, build a hacking subspace from gold-versus-hacked hidden-state differences, and subtract the head's projected component before rescoring."></a><figcaption><strong>The HARVE framework (Figure 1).</strong> The edit changes only the final reward-head vector. The transformer backbone stays frozen.</figcaption></figure>
+    </section>
+
+    <section class="abstract-band" aria-labelledby="abstract-title"><div class="section narrow">
+      <h2 id="abstract-title">At a glance</h2>
+      <p>Reward models can prefer fluent, polished answers that contain a targeted error. The paper introduces <strong>RewardHackBench</strong> to expose these failures and <strong>HARVE</strong> to address them. Across eight scalar reward models, editing a subspace of the reward head improves preference for correct answers on targeted attack categories while largely preserving performance elsewhere. The method uses contrastive examples to calculate the edit, but requires no fine-tuning or backpropagation. The full abstract and experiments are in the <a href="3100_HARVE_Hacking_Aware_Rewar.pdf">paper</a>.</p>
+    </div></section>
+
+    <section class="section benchmark" id="benchmark" aria-labelledby="benchmark-title">
+      <p class="eyebrow">REWARDHACKBENCH</p><h2 id="benchmark-title">A benchmark built around matched attacks.</h2>
+      <p class="section-intro">Each pair contains a gold response and a plausible hacked response to the same query. The held-out test split contains 548 professional-domain and 419 general-purpose pairs.</p>
+      <div class="highlights">
+        <div><strong>1,203</strong><span>Matched response pairs</span><small>967 held out for testing</small></div>
+        <div><strong>13</strong><span>Hacking subcategories</span><small>Grouped into five attack families</small></div>
+        <div><strong>8</strong><span>Reward models evaluated</span><small>Model sizes from 0.6B to 20B</small></div>
+      </div>
+      <div class="category-grid" aria-label="Five reward-hacking families"><span>Surface-form mimicry</span><span>Broken reasoning</span><span>Sycophantic hacking</span><span>Off-topic answers</span><span>Style over substance</span></div>
+      <p class="table-note">Gold-preference rate is the share of pairs on which a reward model scores the gold response above the hacked one; higher is better. Table 1 shows that even models with strong overall scores can fail sharply on particular attack subcategories.</p>
+    </section>
+
+    <section class="section method" id="method" aria-labelledby="method-title">
+      <p class="eyebrow">THE METHOD</p><h2 id="method-title">Three steps. One small edit.</h2>
+      <div class="steps">
+        <article><span class="step-number">01</span><h3>Find fooled pairs</h3><p>For each selected attack subcategory, keep training examples on which the original reward model scores the hacked response above the gold response.</p><span class="step-tag">Contrastive examples</span></article>
+        <article><span class="step-number">02</span><h3>Build a hacking subspace</h3><p>Average the hacked-minus-gold final hidden-state differences within each selected subcategory. Use SVD to obtain an orthonormal basis for their combined span.</p><span class="step-tag">Multiple directions</span></article>
+        <article><span class="step-number">03</span><h3>Edit the reward head</h3><p>Subtract a scaled projection of the reward-head vector onto that subspace. Select the edit strength on development data, then score with the unchanged backbone.</p><span class="step-tag">No gradient updates</span></article>
+      </div>
+      <p class="equation" aria-label="Edited reward head equals the original reward head minus alpha times its projection onto the hacking subspace">w<sub>r</sub><sup>new</sup> = w<sub>r</sub> − α P<sub>hack</sub> w<sub>r</sub></p>
+      <p class="table-note">HARVE targets selected low-performing subcategories for each reward model. The strength α is tuned on a development split under a general-capability preservation constraint; the reported test split and RM-Bench are held out.</p>
+    </section>
+
+    <section class="section results" id="results" aria-labelledby="results-title">
+      <p class="eyebrow">EIGHT REWARD MODELS · HELD-OUT RESULTS</p><h2 id="results-title">Targeted robustness rises across every model.</h2>
+      <p class="section-intro">Compared with the original reward models, HARVE raises gold preference on the target subcategories by 22.4 percentage points on average. It also exceeds the stronger fine-tuning baseline by 15.1 points on average.</p>
+      <div class="highlights result-highlights">
+        <div><strong>+22.4<em>pp</em></strong><span>Target vs. original model</span><small>Average across eight reward models</small></div>
+        <div><strong>+15.1<em>pp</em></strong><span>Target vs. stronger fine-tuning</span><small>Best of 3:1 and 5:1 data mixtures</small></div>
+        <div><strong>+5.3<em>pp</em></strong><span>RM-Bench Hard vs. original</span><small>Average across eight reward models</small></div>
+      </div>
+      <div class="table-heading"><h3>Gold-preference rate on targeted subcategories</h3><span>Table 2 · percent, higher is better</span></div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Target category results; scroll horizontally on smaller screens"><table><caption class="sr-only">Gold-preference rate for the original reward model, its stronger fine-tuning baseline, and HARVE on model-specific target subcategories in Table 2.</caption><thead><tr><th scope="col">Reward model</th><th scope="col">Original</th><th scope="col">Best fine-tune</th><th scope="col">HARVE</th></tr></thead><tbody>
+        <tr><th scope="row">Skywork-V2-Qwen3 · 0.6B</th><td>53.16</td><td>58.36</td><td class="best">83.64</td></tr>
+        <tr><th scope="row">InternLM2-reward · 1.8B</th><td>58.93</td><td>62.50</td><td class="best">78.57</td></tr>
+        <tr><th scope="row">GRM-Llama-3.2 · 3B</th><td>46.47</td><td>54.28</td><td class="best">72.86</td></tr>
+        <tr><th scope="row">Skywork-V2-Llama-3.2 · 3B</th><td>75.09</td><td>76.90</td><td class="best">92.42</td></tr>
+        <tr><th scope="row">RM-Mistral · 7B</th><td>67.87</td><td>84.48</td><td class="best">90.25</td></tr>
+        <tr><th scope="row">FsfairX-LLaMA3-RM · 8B</th><td>57.49</td><td>71.50</td><td class="best">86.96</td></tr>
+        <tr><th scope="row">Skywork-Reward-Llama-3.1 · 8B</th><td>65.94</td><td>73.55</td><td class="best">84.42</td></tr>
+        <tr><th scope="row">InternLM2-reward · 20B</th><td>73.19</td><td>75.36</td><td class="best">88.41</td></tr>
+      </tbody></table></div>
+      <p class="table-note">Each reward model has its own selected target subcategories. “Best fine-tune” is the stronger of the two data-augmented fine-tuning baselines for that model. On non-target subcategories, HARVE improves over the original model for six of eight models; full results and trade-offs are in Table 2 of the paper.</p>
+    </section>
+
+    <section class="section insights" aria-labelledby="insights-title">
+      <p class="eyebrow">WHY MULTIPLE DIRECTIONS MATTER</p><h2 id="insights-title">The signal is broader than surface style.</h2>
+      <p class="section-intro">A separate component ablation tests whether the effect comes from a shared presentation/style direction, category-specific residual directions, or the full joint hacking directions.</p>
+      <div class="insight-grid">
+        <article><strong>−0.81<em>pp</em></strong><h3>Style direction alone</h3><p>Mean change in target gold preference.</p></article>
+        <article><strong>+5.32<em>pp</em></strong><h3>Style-orthogonal residual</h3><p>Mean change in target gold preference.</p></article>
+        <article class="accent"><strong>+16.67<em>pp</em></strong><h3>Joint hacking directions</h3><p>Mean change in target gold preference.</p></article>
+      </div>
+      <p class="table-note">These figures come from the component ablation in Table 4 and have a different setup from the main evaluation above. They support the paper’s conclusion that a single superficial cue does not capture the full hacking signal.</p>
+    </section>
+
+    <section class="section limitations" aria-labelledby="limits-title">
+      <p class="eyebrow">INTERPRETING THE RESULT</p><h2 id="limits-title">A score improvement has limits.</h2>
+      <p class="section-intro">In proxy best-of-N selection, HARVE slows the growth of the reward model’s own score gap under stronger search. At N = 256, the gap falls from 9.62 to 3.28 for GRM-Llama-3.2-3B and from 9.26 to 1.84 for Skywork-V2-Llama-3.2-3B.</p>
+      <p class="table-note">These gaps use each reward model’s score scale and are not an independent measure of answer quality. The paper reports that judged response quality remains broadly similar across methods in this proxy evaluation.</p>
+    </section>
+
+    <section class="section citation" id="citation" aria-labelledby="citation-title"><div class="citation-heading"><div><p class="eyebrow">REFERENCE</p><h2 id="citation-title">Citation</h2></div><button class="copy-button" id="copy-citation" type="button">Copy BibTeX</button></div>
+      <pre><code id="bibtex">@inproceedings{liu2026harve,
+  title     = {HARVE: Hacking-Aware Reward-Head Vector Editing
+               for Robust Reward Models},
+  author    = {Liu, Shuang and Bo, Yuxuan and Zhao, Qiuyang and
+               Huang, Caiyue and Chen, Xiaorong and Liu, Yanguang
+               and Du, Mengnan},
+  booktitle = {Proceedings of the 2026 Conference on Empirical Methods
+               in Natural Language Processing},
+  year      = {2026},
+  url       = {https://arxiv.org/abs/2606.03131}
+}</code></pre><p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <footer><span>HARVE · EMNLP 2026</span><a href="https://github.com/olivialiu121/HARVE-Reward-Head-Editing">Code &amp; data ↗</a><a href="https://arxiv.org/abs/2606.03131">arXiv ↗</a></footer>
+</body>
+</html>
